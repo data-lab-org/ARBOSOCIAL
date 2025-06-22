@@ -352,7 +352,7 @@ const predictions = await predictionsResponse.json();
 ## Suporte
 
 Para dúvidas sobre a API, entre em contato:
-- **Email**: api-support@data-lab.org
+- **Email**: api@data-lab.org
 - **Documentação**: https://docs.arbosocial.data-lab.org (em desenvolvimento)
 - **GitHub**: https://github.com/data-lab-org/ARBOSOCIAL
 
