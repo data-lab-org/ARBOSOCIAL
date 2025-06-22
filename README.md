@@ -231,13 +231,13 @@ Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICE
 
 ## 📞 Contato
 
-- **Email**: kelly.castro@data-lab.org
-- **LinkedIn**: [Kelly Castro](https://linkedin.com/in/kelly-castro)
-- **Website**: [data-lab.org](https://data-lab.org)
+- **Email**: kelly@decastro.com
+- **LinkedIn**: [Kelly Castro](https://linkedin.com/in/castrokelly)
+- **data-lab.org**: [data-lab.org](https://data-lab.org)
 
 ---
 
-**Desenvolvido com ❤️ para salvar vidas através da tecnologia**
+**Análise de dados com propósito ❤️**
 
 *Em memória de Vitorio Paulo de Castro e Ana Maria da Silveira Dias*
 
