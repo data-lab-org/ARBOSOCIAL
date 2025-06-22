@@ -120,7 +120,7 @@ ARBOSOCIAL/
 ### 1. Clone o Repositório
 
 ```bash
-git clone https://github.com/castrokelly/ARBOSOCIAL.git
+git clone https://github.com/data-lab-org/ARBOSOCIAL.git
 cd ARBOSOCIAL
 ```
 
