@@ -1,0 +1,120 @@
+version: '3.8'
+
+services:
+  # Banco de dados PostgreSQL
+  postgres:
+    image: postgis/postgis:14-3.2
+    container_name: arbosocial_postgres
+    environment:
+      POSTGRES_DB: arbosocial
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+    networks:
+      - arbosocial_network
+
+  # Redis para cache e filas
+  redis:
+    image: redis:7-alpine
+    container_name: arbosocial_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - arbosocial_network
+
+  # Backend Flask
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: arbosocial_backend
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/arbosocial
+      - REDIS_URL=redis://redis:6379
+      - SECRET_KEY=dev-secret-key
+      - JWT_SECRET_KEY=jwt-dev-secret
+      - FLASK_ENV=development
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend:/app
+      - ./data:/app/data
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - arbosocial_network
+    command: flask run --host=0.0.0.0 --port=5000 --debug
+
+  # Worker Celery para processamento assíncrono
+  celery_worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: arbosocial_celery
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/arbosocial
+      - REDIS_URL=redis://redis:6379
+      - SECRET_KEY=dev-secret-key
+    volumes:
+      - ./backend:/app
+      - ./data:/app/data
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - arbosocial_network
+    command: celery -A app.celery worker --loglevel=info
+
+  # Frontend React
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: arbosocial_frontend
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000/api
+      - CHOKIDAR_USEPOLLING=true
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - arbosocial_network
+    command: npm start
+
+  # Nginx para proxy reverso (produção)
+  nginx:
+    image: nginx:alpine
+    container_name: arbosocial_nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/ssl:/etc/nginx/ssl
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - arbosocial_network
+    profiles:
+      - production
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  arbosocial_network:
+    driver: bridge
+
