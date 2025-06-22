@@ -201,9 +201,9 @@ npm test
 ## 📚 Documentação
 
 - [Documentação da API](docs/api.md)
-- [Guia de Instalação](docs/installation.md)
-- [Manual do Usuário](docs/user-guide.md)
-- [Arquitetura do Sistema](docs/architecture.md)
+- [Guia de Instalação](docs/installation.md) *em breve
+- [Manual do Usuário](docs/user-guide.md) *em breve
+- [Arquitetura do Sistema](docs/architecture.md) *em breve
 
 ## 🤝 Contribuição
 
